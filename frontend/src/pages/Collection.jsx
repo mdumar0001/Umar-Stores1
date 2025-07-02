@@ -4,11 +4,13 @@ import { assets } from "../assets/assets";
 import Title from "../components/Title";
 import ProductItem from "../components/ProductItem";
 const Collection = () => {
-  const { products } = useContext(ShopContext);
+  const { products, search, showSearch } = useContext(ShopContext);
   const [showFilter, setShowFilter] = useState(false);
   const [filterProducts, setFilterProducts] = useState([]);
   const [category, setCategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
+  // const [sortType, setSortType] = useState("relavent");  aise bhi kar skte hai aur neeche useEffecct uncomment karke and onchange me setSortType and sortProduct function me se
+  //sortType parametr hatake
 
   const toggleCategory = (e) => {
     // console.log(e.target.value);
@@ -20,8 +22,6 @@ const Collection = () => {
     }
   };
   const toggleSubCategory = (e) => {
-    // console.log(e.target.value);
-    // console.log(category.includes(e.target.value));
     if (subCategory.includes(e.target.value)) {
       setSubCategory((prev) => prev.filter((item) => item !== e.target.value));
     } else {
@@ -30,6 +30,13 @@ const Collection = () => {
   };
   const applyFilter = () => {
     let productsCopy = products.slice(); // it will create a copy  of this array
+    if (showSearch && search.length) {
+      //bas && search lagane pe [] ise true man rha and []to lowercase nhi chal rha
+      //showSearch false hoga to ye if case me nhi ayega aur  pura product dikhayega
+      productsCopy = productsCopy.filter((item) =>
+        item.name.toLowerCase().includes(search.toLowerCase())
+      );
+    }
     if (category.length > 0) {
       productsCopy = productsCopy.filter((item) =>
         category.includes(item.category)
@@ -43,13 +50,31 @@ const Collection = () => {
     setFilterProducts(productsCopy);
   };
 
+  const sortProduct = (sortType) => {
+    let fpCopy = filterProducts.slice(); //creating copy of this filtered products array not full array bcoz may be user applied filter
+    switch (sortType) {
+      case "low-high":
+        setFilterProducts(fpCopy.sort((a, b) => a.price - b.price));
+        break;
+      case "high-low":
+        setFilterProducts(fpCopy.sort((a, b) => b.price - a.price));
+        break;
+      default:
+        applyFilter();
+        break;
+    }
+  };
   // useEffect(() => {  now e can remove this bcoz when first time this component loaded or mounted
   //then in applyfilter function products .slice() return full array of collection and will be set in setFilterProducts
   //   setFilterProducts(products);
   // }, []);
   useEffect(() => {
     applyFilter();
-  }, [category, subCategory]);
+  }, [category, subCategory, search, showSearch]); //showSearch false ho jayega to all product dikyagea
+
+  // useEffect(() => {
+  //   sortProduct();
+  // }, [sortType]);
   return (
     <div className="flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t">
       {/* Filter options */}
@@ -144,7 +169,10 @@ const Collection = () => {
         <div className="flex justify-between text-base sm:text-2xl mb-4">
           <Title text1={"ALL"} text2={" COLLECIONS"} />
           {/* PRODUCT SORT */}
-          <select className="border-2 border-gray-300 text-sm px-2">
+          <select
+            onChange={(e) => sortProduct(e.target.value)}
+            className="border-2 border-gray-300 text-sm px-2"
+          >
             <option value="relavent">Sort by:Relavent</option>
             <option value="low-high">Sort by:Low to High</option>
             <option value="high-low">Sort by:High to Low</option>
