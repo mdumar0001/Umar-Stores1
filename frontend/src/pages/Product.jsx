@@ -7,16 +7,18 @@ import React, {
 import { useParams, useSearchParams } from "react-router-dom";
 import { assets, products } from "../assets/assets";
 import { ShopContext } from "../context/shopContext";
+import RelatedProducts from "./RelatedProducts";
 
 const Product = () => {
   const { productId } = useParams(); //destructuring products id from url params
   // console.log(productId);
-  const { products, currency } = useContext(ShopContext);
+  const { products, currency, addToCart } = useContext(ShopContext);
   const [productData, setProductData] = useState(false);
   const [image, setImage] = useState("");
   const [size, setSize] = useState("");
   const fetchProductData = (async) => {
     // console.log(products[0]);
+
     products.map((item) => {
       if (item._id == productId) {
         setProductData(item);
@@ -88,7 +90,10 @@ const Product = () => {
               ))}
             </div>
           </div>
-          <button className="bg-black text-white px-8 py-3 text-sm active:bg-gray-700">
+          <button
+            onClick={() => addToCart(productData._id, size)}
+            className="bg-black text-white px-8 py-3 text-sm active:bg-gray-700"
+          >
             ADD TO CART
           </button>
           <hr className="mt-8 sm:w-4/5" />
@@ -99,6 +104,35 @@ const Product = () => {
           </div>
         </div>
       </div>
+      {/* -----------Description & Review Section------------- */}
+      <div className="mt-20">
+        <div className="flex">
+          <b className="border px-5 py-3 text-sm">Description</b>
+          <p className="border px-5 py-3 text-sm">Reviews (122)</p>
+        </div>
+        <div className="flex flex-col gap-4 border  px-6 py-6 text-sm text-gray-500">
+          <p>
+            An e-commerce website is an online platform that facilitates the
+            buying and selling of products and services over the internet.It
+            serves as a virtual marketplace where businesses and individuals can
+            showcase thier products, interact with customers, and conduct
+            transactions without the need for a physical presence.E-commerce
+            websites have gained immense popularity due to their
+            convenience,accessibility and the global reach they offer.
+          </p>
+          <p>
+            E-commerce websites typically display products or services along
+            with detailed description,images,prices,and any available
+            variations(e.g.sizes,colors).Each product usually has its own
+            dedicated page with relevant information.
+          </p>
+        </div>
+      </div>
+      {/* -------display related products--------------- */}
+      <RelatedProducts
+        category={productData.category}
+        subCategory={productData.subCategory}
+      />
     </div>
   ) : (
     <div className="opacity-0"></div>

@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ShopContext } from "../context/shopContext";
 import { assets } from "../assets/assets";
 import Title from "../components/Title";
@@ -64,7 +64,7 @@ const Collection = () => {
         break;
     }
   };
-  // useEffect(() => {  now e can remove this bcoz when first time this component loaded or mounted
+  // useEffect(() => {  now we can remove this bcoz when first time this component loaded or mounted
   //then in applyfilter function products .slice() return full array of collection and will be set in setFilterProducts
   //   setFilterProducts(products);
   // }, []);
