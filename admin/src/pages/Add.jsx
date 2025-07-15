@@ -231,7 +231,7 @@ const Add = ({ token }) => {
                 L
               </p>
             </div>
-            {sizes}
+
             <div
               onClick={() =>
                 setSizes((prev) =>

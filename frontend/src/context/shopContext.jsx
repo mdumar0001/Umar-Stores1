@@ -1,15 +1,17 @@
 import React, { createContext, useEffect, useState } from "react";
-import { products } from "../assets/assets";
+// import { products } from "../assets/assets";
 export const ShopContext = createContext();
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 const ShopContextProvider = (props) => {
   const currency = "$";
   const delivery_fee = 10;
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
   //we will  add feature for seach bar when we click on this it will open collection page and get the searched item
   const [search, setSearch] = useState([]);
   const [showSearch, setShowSearch] = useState(false); //when true then we will display search bar and if false then we wil hide it
   const [cartItems, setCartItems] = useState({});
+  const [products, setProducts] = useState([]);
   const navigate = useNavigate();
 
   const addToCart = async (itemId, size) => {
@@ -76,6 +78,11 @@ const ShopContextProvider = (props) => {
     }
     return totalAmount;
   };
+
+  const productsData = async () => {
+    try {
+    } catch (error) {}
+  };
   const value = {
     products,
     currency,
@@ -90,6 +97,7 @@ const ShopContextProvider = (props) => {
     updateQuantity,
     getCartAmount,
     navigate,
+    backendUrl,
   };
 
   return (
