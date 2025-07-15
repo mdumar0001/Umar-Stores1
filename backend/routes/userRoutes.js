@@ -3,7 +3,7 @@ import {
   loginUser,
   registerUser,
   adminLogin,
-} from "../controllers/userControllers";
+} from "../controllers/userControllers.js";
 const userRouter = expres.Router();
 
 userRouter.post("/register", registerUser);
