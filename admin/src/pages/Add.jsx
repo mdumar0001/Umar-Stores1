@@ -15,30 +15,30 @@ const Add = ({ token }) => {
   const [category, setCategory] = useState("Men");
   const [subCategory, setSubCategory] = useState("Topwear");
   const [bestseller, setBestseller] = useState(false);
-  const [sizes, setSizes] = useState([""]);
+  const [sizes, setSizes] = useState([]);
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     try {
-      const formDate = new formDate();
-      formDate.append("name", name);
-      formDate.append("description", description);
-      formDate.append("price", price);
-      formDate.append("category", category);
-      formDate.append("subCategory", subCategory);
-      formDate.append("bestseller", bestseller);
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("description", description);
+      formData.append("price", price);
+      formData.append("category", category);
+      formData.append("subCategory", subCategory);
+      formData.append("bestseller", bestseller);
       //we cannot send array in fromdata we have to convert it into string
-      formDate.append("sizes", JSON.stringify(sizes));
+      formData.append("sizes", JSON.stringify(sizes));
 
       //sending images
-      image1 && formDate.append("image1", image1);
-      image2 && formDate.append("image2", image2); //bcoz jo select kiye hai wahi jaye submit hone pe
-      image3 && formDate.append("image3", image3);
-      image4 && formDate.append("image4", image4);
+      image1 && formData.append("image1", image1);
+      image2 && formData.append("image2", image2); //bcoz jo select kiye hai wahi jaye submit hone pe
+      image3 && formData.append("image3", image3);
+      image4 && formData.append("image4", image4);
 
       const response = await axios.post(
         backendUrl + "/api/product/add",
-        formDate,
+        formData,
         { headers: { token } }
       );
       // console.log(response.data);
@@ -50,8 +50,10 @@ const Add = ({ token }) => {
         setImage2(false);
         setImage3(false);
         setImage4(false);
+        setSizes([]);
+      } else {
+        toast.error(response.data.message);
       }
-      toast.error(response.data.message);
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -78,7 +80,7 @@ const Add = ({ token }) => {
               hidden
             />
           </label>{" "}
-          <label htmlFor="image1">
+          <label htmlFor="image2">
             <img
               className="w-20"
               src={!image2 ? assets.upload_area : URL.createObjectURL(image2)}
@@ -92,7 +94,7 @@ const Add = ({ token }) => {
               hidden
             />
           </label>{" "}
-          <label htmlFor="image1">
+          <label htmlFor="image3">
             <img
               className="w-20"
               src={!image3 ? assets.upload_area : URL.createObjectURL(image3)}
@@ -105,7 +107,7 @@ const Add = ({ token }) => {
               hidden
             />
           </label>{" "}
-          <label htmlFor="image1">
+          <label htmlFor="image4">
             <img
               src={!image4 ? assets.upload_area : URL.createObjectURL(image4)}
               className="w-20"
@@ -191,8 +193,8 @@ const Add = ({ token }) => {
             >
               <p
                 className={`${
-                  sizes.includes("S") ? "bg-slate-200" : "bg-pink-100"
-                } bg-slate-200 px-3 py-1 cursor-pointer`}
+                  sizes.includes("S") ? "bg-pink-100" : "bg-slate-200"
+                }  px-3 py-1 cursor-pointer`}
               >
                 S
               </p>
@@ -209,7 +211,7 @@ const Add = ({ token }) => {
               <p
                 className={`${
                   sizes.includes("M") ? "bg-pink-100" : "bg-slate-200"
-                } bg-slate-200 px-3 py-1 cursor-pointer`}
+                } px-3 py-1 cursor-pointer`}
               >
                 M
               </p>
@@ -226,7 +228,7 @@ const Add = ({ token }) => {
               <p
                 className={`${
                   sizes.includes("L") ? "bg-pink-100" : "bg-slate-200"
-                } bg-slate-200 px-3 py-1 cursor-pointer`}
+                } px-3 py-1 cursor-pointer`}
               >
                 L
               </p>
@@ -244,7 +246,7 @@ const Add = ({ token }) => {
               <p
                 className={`${
                   sizes.includes("XL") ? "bg-pink-100" : "bg-slate-200"
-                } bg-slate-200 px-3 py-1 cursor-pointer`}
+                }  px-3 py-1 cursor-pointer`}
               >
                 XL
               </p>
@@ -261,7 +263,7 @@ const Add = ({ token }) => {
               <p
                 className={`${
                   sizes.includes("XXL") ? "bg-pink-100" : "bg-slate-200"
-                } bg-slate-200 px-3 py-1 cursor-pointer`}
+                } px-3 py-1 cursor-pointer`}
               >
                 XXL
               </p>

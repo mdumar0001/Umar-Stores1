@@ -9,7 +9,7 @@ const LatestCollection = () => {
   const [latesProducts, setLatestProducts] = useState([]);
   useEffect(() => {
     setLatestProducts(products.slice(0, 10));
-  }, []); //so it will executes once when component mounted
+  }, [products]); //so it will executes once when component mounted
   // console.log(products);
   console.log(latesProducts);
   return (

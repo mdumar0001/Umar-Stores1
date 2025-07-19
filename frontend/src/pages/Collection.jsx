@@ -70,8 +70,8 @@ const Collection = () => {
   // }, []);
   useEffect(() => {
     applyFilter();
-  }, [category, subCategory, search, showSearch]); //showSearch false ho jayega to all product dikyagea
-
+  }, [category, subCategory, search, showSearch, products]); //showSearch false ho jayega to all product dikyagea
+  //finally we added products in dependency array becoz when we hit refresh button then the context pages,s getProductsData will run again and set product list so we set here
   // useEffect(() => {
   //   sortProduct();
   // }, [sortType]);

@@ -9,7 +9,7 @@ const BestSeller = () => {
     const productsArray = products.filter((item) => item.bestseller == true);
 
     setBestSellerProducts(productsArray.slice(0, 5));
-  }, []);
+  }, [products]);
 
   return (
     <div className="my-10s">

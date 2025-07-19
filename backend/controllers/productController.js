@@ -8,7 +8,7 @@ const addProduct = async (req, res) => {
       description,
       price,
       category,
-      subCatagory,
+      subCategory,
       sizes,
       bestseller,
     } = req.body;
@@ -31,7 +31,7 @@ const addProduct = async (req, res) => {
         return result.secure_url;
       })
     );
-    console.log(imagesUrl); //we get array of urls
+    // console.log(imagesUrl); //we get array of urls
     //now lets upload it on database
 
     const productData = {
@@ -39,7 +39,7 @@ const addProduct = async (req, res) => {
       description,
       category,
       price: Number(price),
-      subCatagory,
+      subCategory,
       bestseller: bestseller === "true" ? true : false,
       sizes: JSON.parse(sizes), //converting string to array
       image: imagesUrl,
@@ -56,12 +56,12 @@ const addProduct = async (req, res) => {
       description,
       price,
       category,
-      subCatagory,
+      subCategory,
       sizes,
       bestseller
     );
-    console.log(image1, image2, image3, image4);
-    res.json();
+    // console.log(image1, image2, image3, image4);
+    // res.json(success: true, message: "product addes successfully");
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
