@@ -36,6 +36,37 @@ const PlaceOrder = () => {
     setFormData((data) => ({ ...data, [name]: value }));
   };
 
+  const initPay = (order) => {
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: order.amount,
+      currency: order.currency,
+      name: "Order Payment",
+      description: "Order Payment",
+      order_id: order_id,
+      receipt: order.receipt,
+      handler: async (response) => {
+        console.log(response); //response will be used for verification of payment
+        try {
+          const { data } = await axios.post(
+            backendUrl + "/api/order/verifyRazorpay",
+            response,
+            { headers: { token } }
+          );
+          if (data.success) {
+            navigate("/orders");
+            setCartItems({});
+          }
+        } catch (error) {
+          console.log(error);
+          toast.error(error);
+        }
+      },
+    };
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  };
+
   const onSubmitHandler = async (event) => {
     event.preventDefault();
     try {
@@ -76,6 +107,30 @@ const PlaceOrder = () => {
           } else {
             toast.error(response.data.message);
           }
+          break;
+        case "stripe":
+          const responsestripe = await axios.post(
+            backendUrl + "/api/order/stripe",
+            orderData,
+            { headers: { token } }
+          );
+          if (responsestripe.data.success) {
+            const { session_url } = responsestripe.data;
+            window.location.replace(session_url);
+          } else {
+            toast.error(responsestripe.data.message); //go to dummy payment stripe to get fake card number
+          }
+          break;
+        case "razorpay":
+          const responseRazorpay = await axios.post(
+            backendUrl + "/api/order/razorpay",
+            orderData,
+            { headers: { token } }
+          );
+          if (responseRazorpay.data.success) {
+            //  console.log(responseRazorpay.data.order);
+            initPay(responseRazorpay.data.order);
+          } //go razorpay dummy card website for fake card number
           break;
         default:
           break;
