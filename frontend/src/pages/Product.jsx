@@ -16,9 +16,9 @@ const Product = () => {
   const [productData, setProductData] = useState(false);
   const [image, setImage] = useState("");
   const [size, setSize] = useState("");
-  const fetchProductData = (async) => {
+  const fetchProductData = async () => {
     // console.log(products[0]);
-
+    // console.log(products);
     products.map((item) => {
       if (item._id == productId) {
         setProductData(item);
@@ -31,7 +31,12 @@ const Product = () => {
 
   useEffect(() => {
     fetchProductData();
-  }, [productId]);
+  }, [productId, products]);
+  // yaha products bhi lagana padega dependency array me kyunki shopCOntext me initially products array empty array  [] set hai aur time lagta hai set hone me getProductsData() se
+  //to wahi empty yaha aa jayega lekin jab setProducts se update hoga aur dobara ye page re-render hoga due to products yaha bhej rhe ,lekin yaha hum dependency array me sirf productId lagayenge to ye har bar refresh me first render pe set hoga to change nhi hoga to ape aap
+  //fetchProductData()call nhi hone dega
+  // setProducts(response.data.products) is asynchronous.
+  //React does not update the state immediately. Instead, it schedules the update and re-renders your component later.
   return productData ? (
     <div className="border-t-2 pt-10 transition-opacity ease-in duration-500 opacity-100">
       {/*---------------------- Product Data---------------------- */}

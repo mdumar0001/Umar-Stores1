@@ -4,6 +4,7 @@ import CartTotal from "../components/CartTotal";
 import { assets } from "../assets/assets";
 import { ShopContext } from "../context/shopContext";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 const PlaceOrder = () => {
   const [method, setMethod] = useState("cod");
@@ -31,7 +32,7 @@ const PlaceOrder = () => {
 
   const onChangeHandler = (event) => {
     const name = event.target.name;
-    const value = event.taregt.value;
+    const value = event.target.value;
 
     setFormData((data) => ({ ...data, [name]: value }));
   };
@@ -90,7 +91,7 @@ const PlaceOrder = () => {
       let orderData = {
         address: formData,
         items: orderItems,
-        amount: getCartAmount + delivery_fee,
+        amount: getCartAmount() + delivery_fee,
       };
       switch (method) {
         //API call for COD
@@ -116,7 +117,7 @@ const PlaceOrder = () => {
           );
           if (responsestripe.data.success) {
             const { session_url } = responsestripe.data;
-            window.location.replace(session_url);
+            window.location.replace(session_url); //we will send the user to this url
           } else {
             toast.error(responsestripe.data.message); //go to dummy payment stripe to get fake card number
           }

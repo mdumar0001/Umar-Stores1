@@ -1,4 +1,4 @@
-import React, { createContext, use, useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import axios from "axios";
 // import { products } from "../assets/assets";
 export const ShopContext = createContext();
@@ -7,7 +7,10 @@ import { useNavigate } from "react-router-dom";
 const ShopContextProvider = (props) => {
   const currency = "$";
   const delivery_fee = 10;
+
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
+  // console.log(import.meta.env.VITE_BACKEND_URL);
   //we will  add feature for seach bar when we click on this it will open collection page and get the searched item
   const [search, setSearch] = useState([]);
   const [showSearch, setShowSearch] = useState(false); //when true then we will display search bar and if false then we wil hide it
@@ -54,6 +57,7 @@ const ShopContextProvider = (props) => {
 
   const getCartCount = () => {
     let totalCount = 0;
+
     for (const items in cartItems) {
       //first for loop will iterate to items/products
       for (const item in cartItems[items]) {
@@ -91,16 +95,20 @@ const ShopContextProvider = (props) => {
 
   const getCartAmount = () => {
     let totalAmount = 0;
-    for (const items in cartItems) {
-      let itemInfo = products.find((product) => product._id === items);
-      for (const item in cartItems[items]) {
-        try {
-          if (cartItems[items][item] > 0) {
-            totalAmount += itemInfo.price * cartItems[items][item];
+    if (products.length) {
+      //kyunki asynchrounsouly products pahle set ho jayega tabhi ye karo nhi to wahi refresh me problem hogi ,carttotal.jsx me
+      for (const items in cartItems) {
+        // console.log(backendUrl);
+        let itemInfo = products.find((product) => product._id === items);
+        for (const item in cartItems[items]) {
+          try {
+            if (cartItems[items][item] > 0) {
+              totalAmount += itemInfo.price * cartItems[items][item];
+            }
+          } catch (error) {
+            console.log(error);
+            toast.error(error.message);
           }
-        } catch (error) {
-          console.log(error);
-          toast.error(error.message);
         }
       }
     }
@@ -109,11 +117,14 @@ const ShopContextProvider = (props) => {
 
   const getProductsData = async () => {
     try {
-      const response = await axios.get(backendUrl + "api/product/list");
+      const response = await axios.get(backendUrl + "/api/product/list");
       if (response.data.success) {
         setProducts(response.data.products);
+        // console.log(products);
+        // console.log(response.data.products);
+        // console.log(products);
       } else {
-        toast.error(error.message);
+        toast.error(response.message);
       }
     } catch (error) {
       console.log(error);
@@ -131,7 +142,7 @@ const ShopContextProvider = (props) => {
       ); //{} becoz we don not have to send anything
       if (response.data.success) {
         setCartItems(response.data.cartData);
-      }
+      } else toast.error(response.data.message);
     } catch (error) {
       console.log(error);
       toast.error(error.message);
@@ -140,6 +151,10 @@ const ShopContextProvider = (props) => {
   useEffect(() => {
     getProductsData(); //so that it get called and set the product if we reload or refresh the page as we set []
   }, []);
+
+  // useEffect(() => {
+  //   console.log("Products updated:", products);
+  // }, [products]);
 
   useEffect(() => {
     //so that it get called and set the product if we reload or refresh the page

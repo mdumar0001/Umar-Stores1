@@ -3,8 +3,9 @@ import userModel from "../models/UserModel.js";
 //add products to user cart
 const addToCart = async (req, res) => {
   try {
-    const { userId, itemId, size } = req.body;
+    const { itemId, size } = req.body;
     //with the help of userId we find the user and update its cartdata using itemId and size
+    const userId = req.user.id;
     const userData = await userModel.findById(userId);
     const cartData = await userData.cartData;
 
@@ -31,8 +32,8 @@ const addToCart = async (req, res) => {
 const updateCart = async (req, res) => {
   try {
     //userId is added by auth middleare
-    const { userId, itemId, size, quantity } = req.body;
-
+    const { itemId, size, quantity } = req.body;
+    const userId = req.user.id;
     const userData = await userModel.findById(userId);
     let cartData = await userData.cartData;
 
@@ -50,9 +51,12 @@ const updateCart = async (req, res) => {
 //get user cart data
 const getUserCart = async (req, res) => {
   try {
-    const { userId } = req.body;
+    // const { userId } = req.body;
+    const userId = req.user.id;
 
-    let userData = await userData.findById(userId);
+    let userData = await userModel.findById(userId);
+    console.log(userData);
+
     let cartData = await userData.cartData;
 
     res.json({ success: true, cartData });
