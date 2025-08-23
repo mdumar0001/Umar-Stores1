@@ -9,6 +9,7 @@ const ShopContextProvider = (props) => {
   const delivery_fee = 10;
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
+  // localStorage.removeItem("token");
 
   // console.log(import.meta.env.VITE_BACKEND_URL);
   //we will  add feature for seach bar when we click on this it will open collection page and get the searched item
@@ -18,8 +19,13 @@ const ShopContextProvider = (props) => {
   const [products, setProducts] = useState([]);
   const [token, setToken] = useState("");
   const navigate = useNavigate();
+  localStorage.removeItem("token");
+  // setToken("");
 
   const addToCart = async (itemId, size) => {
+    if (!token) {
+      return toast.warn("Login to Add to Cart");
+    }
     let cartData = structuredClone(cartItems); //we use this method to create a copy of object
     if (!size) {
       //if no size is selected then we wont add
@@ -41,8 +47,10 @@ const ShopContextProvider = (props) => {
     }
     setCartItems(cartData);
     //now in database we are updating the cartdata to
+    console.log("yaha tak chal rha sahi");
     if (token) {
       try {
+        console.log("token hai already");
         await axios.post(
           backendUrl + "/api/cart/add",
           { itemId, size },

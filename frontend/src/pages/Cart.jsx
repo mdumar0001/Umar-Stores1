@@ -3,15 +3,20 @@ import { ShopContext } from "../context/shopContext";
 import Title from "../components/Title";
 import { assets } from "../assets/assets";
 import CartTotal from "../components/CartTotal";
+import { toast } from "react-toastify";
 const Cart = () => {
-  const { products, currency, cartItems, updateQuantity, navigate } =
+  const { products, currency, cartItems, updateQuantity, navigate, token } =
     useContext(ShopContext);
   //now we will change these in one array fromat where we will use products and cartItems data and use it below
 
   const [cartData, setCartData] = useState([]);
 
   useEffect(() => {
-    // console.log("hi");
+    if (!token) {
+      toast.warn("Please Login to go to Cart");
+      return navigate("/");
+    }
+    console.log("hi");
     if (products.length > 0) {
       const tempData = [];
       for (const items in cartItems) {
