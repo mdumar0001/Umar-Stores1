@@ -41,6 +41,15 @@ const Navbar = () => {
           <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
         </NavLink>
       </ul>
+      <button
+        onClick={
+          () => window.open(`${import.meta.env.VITE_ADMIN_PANEL}`, "_blank")
+          //VITE_likhna padta hai pahle environent variable banane se pahle
+        }
+        className="px-3 py-2 rounded-lg text-sm bg-white-500 text-black hover:text-white hover:bg-indigo-800 active:translate-y-[1px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-300 shadow"
+      >
+        Admin Panel
+      </button>
       <div className="flex items-center gap-6">
         <img
           onClick={() => setShowSearch(true)}
@@ -71,6 +80,7 @@ const Navbar = () => {
             </div>
           )}
         </div>
+
         <Link to="/cart" className="relative">
           <img src={assets.cart_icon} className="w-5 min-w-5" />
           <p className="absolute right-[-5px] bottom-[-5px] w-4  text-center leading-4 bg-black text-white aspect-square rounded-full text-[8px]">
